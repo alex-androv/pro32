@@ -97,12 +97,6 @@
       >
         Очистить
       </button>
-      <button 
-        class="btn btn-primary"
-        @click="search"
-      >
-        Найти
-      </button>
     </div>
   </div>
 </template>
