@@ -2,32 +2,32 @@
   <div class="partner-filters">
     <div class="row g-3 mb-4">
       <div class="col-md-6 d-flex">
-        <select 
-          class="form-select" 
+        <select
+          class="form-select"
           v-model="localFilters.country"
           @change="emitUpdate"
         >
           <option value="">Страна</option>
-          <option 
-            v-for="country in countries" 
-            :key="country" 
+          <option
+            v-for="country in countries"
+            :key="country"
             :value="country"
           >
             {{ country }}
           </option>
         </select>
       </div>
-      
+
       <div class="col-md-6">
-        <select 
-          class="form-select" 
+        <select
+          class="form-select"
           v-model="localFilters.city"
           @change="emitUpdate"
         >
           <option value="">Город</option>
-          <option 
-            v-for="city in filteredCities" 
-            :key="city" 
+          <option
+            v-for="city in filteredCities"
+            :key="city"
             :value="city"
           >
             {{ city }}
@@ -37,34 +37,45 @@
     </div>
 
     <div class="product-type-toggle mb-4">
-      <div class="btn-group" role="group">
-        <input 
-          type="radio" 
-          class="btn-check" 
-          name="productType" 
+      <div
+        class="btn-group"
+        role="group"
+      >
+        <input
+          type="radio"
+          class="btn-check"
+          name="productType"
           id="homeType"
           value="Для дома"
           v-model="localFilters.productType"
           @change="emitUpdate"
+        />
+        <label
+          class="btn btn-outline-primary"
+          for="homeType"
+          >Для дома</label
         >
-        <label class="btn btn-outline-primary" for="homeType">Для дома</label>
 
-        <input 
-          type="radio" 
-          class="btn-check" 
-          name="productType" 
+        <input
+          type="radio"
+          class="btn-check"
+          name="productType"
           id="businessType"
           value="Для бизнеса"
           v-model="localFilters.productType"
           @change="emitUpdate"
+        />
+        <label
+          class="btn btn-outline-primary"
+          for="businessType"
+          >Для бизнеса</label
         >
-        <label class="btn btn-outline-primary" for="businessType">Для бизнеса</label>
       </div>
     </div>
 
     <div class="products-filter mb-4">
       <div class="btn-group">
-        <button 
+        <button
           v-for="product in products"
           :key="product"
           class="btn btn-outline-secondary"
@@ -78,7 +89,7 @@
 
     <div class="partner-types-filter mb-4">
       <div class="d-flex flex-wrap gap-2">
-        <button 
+        <button
           v-for="type in partnerTypes"
           :key="type"
           class="btn btn-outline-secondary"
@@ -91,7 +102,7 @@
     </div>
 
     <div class="d-flex gap-3">
-      <button 
+      <button
         class="btn btn-outline-secondary"
         @click="clearFilters"
       >
@@ -102,76 +113,80 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import partnersData from '../data/partners.json'
+import { ref, computed, watch } from "vue";
+import partnersData from "../data/partners.json";
 
 const props = defineProps({
   filters: {
     type: Object,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const emit = defineEmits(['update:filters', 'clear', 'search'])
+const emit = defineEmits(["update:filters", "clear"]);
 
-const localFilters = ref({ ...props.filters })
+const localFilters = ref({ ...props.filters });
 
 const countries = computed(() => {
-  return [...new Set(partnersData.map(p => p.country))]
-})
+  return [...new Set(partnersData.map((p) => p.country))];
+});
 
 const filteredCities = computed(() => {
   const cities = partnersData
-    .filter(p => !localFilters.value.country || p.country === localFilters.value.country)
-    .map(p => p.city)
-  return [...new Set(cities)]
-})
+    .filter(
+      (p) =>
+        !localFilters.value.country || p.country === localFilters.value.country
+    )
+    .map((p) => p.city);
+  return [...new Set(cities)];
+});
 
-const products = ['Антивирус', 'GetScreen', 'Passwork']
+const products = ["Антивирус", "GetScreen", "Passwork"];
 const partnerTypes = [
-  'Партнеры Retail',
-  'Партнеры Corporate',
-  'Интернет-провайдеры',
-  'Online партнеры',
-  'Продажи партнерам',
-  'Education партнеры',
-  'MSP Партнеры'
-]
+  "Партнеры Retail",
+  "Партнеры Corporate",
+  "Интернет-провайдеры",
+  "Online партнеры",
+  "Продажи партнерам",
+  "Education партнеры",
+  "MSP Партнеры",
+];
 
 const toggleProduct = (product) => {
-  const index = localFilters.value.products.indexOf(product)
+  const index = localFilters.value.products.indexOf(product);
   if (index === -1) {
-    localFilters.value.products.push(product)
+    localFilters.value.products.push(product);
   } else {
-    localFilters.value.products.splice(index, 1)
+    localFilters.value.products.splice(index, 1);
   }
-  emitUpdate()
-}
+  emitUpdate();
+};
 
 const togglePartnerType = (type) => {
-  const index = localFilters.value.partnerTypes.indexOf(type)
+  const index = localFilters.value.partnerTypes.indexOf(type);
   if (index === -1) {
-    localFilters.value.partnerTypes.push(type)
+    localFilters.value.partnerTypes.push(type);
   } else {
-    localFilters.value.partnerTypes.splice(index, 1)
+    localFilters.value.partnerTypes.splice(index, 1);
   }
-  emitUpdate()
-}
+  emitUpdate();
+};
 
 const emitUpdate = () => {
-  emit('update:filters', { ...localFilters.value })
-}
+  emit("update:filters", { ...localFilters.value });
+};
 
 const clearFilters = () => {
-  emit('clear')
-}
+  emit("clear");
+};
 
-const search = () => {
-  emit('search')
-}
-watch(() => props.filters, (newFilters) => {
-  localFilters.value = { ...newFilters }
-}, { deep: true })
+watch(
+  () => props.filters,
+  (newFilters) => {
+    localFilters.value = { ...newFilters };
+  },
+  { deep: true }
+);
 </script>
 <style scoped>
 .partner-filters {
